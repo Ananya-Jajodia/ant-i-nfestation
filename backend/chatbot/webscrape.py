@@ -114,8 +114,14 @@ else:
 # PASSWORD = "aipraccers2025"
 
 headers = {
-    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36"
+    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36",
+    "Referer": "https://garden.org/",
+    "Accept-Language": "en-US,en;q=0.9",
+    "Accept-Encoding": "gzip, deflate, br",
+    "DNT": "1",
+    "Connection": "keep-alive"
 }
+
 
 
 # Start a session
@@ -153,7 +159,7 @@ def fetch_page(url):
     print(f"Fetching {url}")
     
     # Use the session to maintain authentication
-    response = session.get(url, headers=headers)
+    response = scraper.get(url, headers=headers)
     
     if response.status_code == 200:
         soup = BeautifulSoup(response.text, 'html.parser')
@@ -171,10 +177,14 @@ def fetch_page(url):
 
 # Scrape each URL and store results
 scraped_data = []
+i = 100
 for url in urls:
     page_data = fetch_page(url)
     if page_data:
         scraped_data.append(page_data)
+    i -= 1
+    if i < 0:
+        break
 
 # Print the scraped data
 for data in scraped_data:
