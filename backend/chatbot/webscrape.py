@@ -1,7 +1,7 @@
 import os
 import gzip
 import requests
-import pandas as pd
+# import pandas as pd
 from bs4 import BeautifulSoup
 from xml.etree import ElementTree as ET
 import cloudscraper
@@ -20,6 +20,15 @@ def save_to_csv(data, filename):
         writer.writeheader()
         writer.writerows(data)
 
+# checks if the url is in the disallowed list
+def item_not_in_file(item, file_path):
+    """Checks if a given item is NOT present in the text file."""
+    with open(file_path, "r", encoding="utf-8") as file:
+        for line in file:
+            if item in line:
+                return False  # Item is found, so it's NOT missing
+    return True  # Item is NOT found in the file
+
 # Initialize CloudScraper to bypass Cloudflare protections
 scraper = cloudscraper.create_scraper()
 
@@ -34,7 +43,7 @@ headers = {
 }
 
 # Load and parse the sitemap file
-sitemap_path = "/Users/Ananya/ant-i-nfestation/data/sitemaps/map.1.xml.gz"
+sitemap_path = "/Users/iam_aj/ant-i-nfestation/data/sitemaps/map.1.xml.gz"
 
 with gzip.open(sitemap_path, 'rt', encoding='utf-8') as f:
     print("Sitemap loaded successfully.")
@@ -54,10 +63,11 @@ urls = [elem.text for elem in root.findall('.//ns:loc', namespaces)]
 #             return parts[index].replace("-", " ").title()  # Format plant name
 #     return "Unknown"
 
+# Query the url
 def fetch_page(url):
     """Fetches and extracts content from the page."""
     print(f"Fetching {url}")
-    
+
     # Request the page
     response = scraper.get(url, headers=headers)
     
@@ -84,9 +94,13 @@ scraped_data = []
 limit = 100  # Prevent excessive requests
 
 for url in urls[:limit]:
-    page_data = fetch_page(url)
-    if page_data:
-        scraped_data.append(page_data)
+    if item_not_in_file(url, "/Users/iam_aj/ant-i-nfestation/data/robots.txt"):
+        page_data = fetch_page(url)
+        if page_data:
+            scraped_data.append(page_data)
+    else:
+        print(f"{url} in robots, access not allowed!")
+
 
 # Convert scraped data to DataFrame and save as CSV
 # df = pd.DataFrame(scraped_data)
