@@ -34,16 +34,16 @@ vector_db = FAISS(
 )
 
 
-memory = ConversationBufferMemory(memory_key="chat_history", return_messages=True)
-# retriever = vector_db.as_retriever(search_type="similarity", search_kwargs={"k": 5})
+# memory = ConversationBufferMemory(memory_key="chat_history", return_messages=True)
+# # retriever = vector_db.as_retriever(search_type="similarity", search_kwargs={"k": 5})
 
 
-# Set up a retrieval chain
-retrieval_chain = ConversationalRetrievalChain.from_llm(
-    llm=Ollama(model="llama3.2"),
-    retriever=vector_db.as_retriever(search_type="similarity", search_kwargs={"k": 5}),
-    memory=memory
-)
+# # Set up a retrieval chain
+# retrieval_chain = ConversationalRetrievalChain.from_llm(
+#     llm=Ollama(model="llama3.2"),
+#     retriever=vector_db.as_retriever(search_type="similarity", search_kwargs={"k": 5}),
+#     memory=memory
+# )
 
 # queries = [
 #     "How much water do my daylilies need?",
@@ -53,13 +53,13 @@ retrieval_chain = ConversationalRetrievalChain.from_llm(
 
 # for query in queries:
 #     results = vector_db.similarity_search(query, k=3)  # Retrieve top 3 results
-#     print(f"\n🔍 Query: {query}")
+#     print(f"\n Query: {query}")
 #     for i, doc in enumerate(results):
 #         print(f"Result {i+1}: {doc.page_content}")
 
-print(vector_db.similarity_search("How much water do my daylilies need?")[0].page_content)
-print(vector_db.similarity_search("How much sun does it need?")[0].page_content)
-print(vector_db.similarity_search("What time of year should I fertilize it?")[0].page_content)
+print(vector_db.similarity_search("How much water does my roses need?")[0].page_content)
+print(vector_db.similarity_search("How much sun does my roses need?")[0].page_content)
+print(vector_db.similarity_search("What time of year should I fertilize my roses?")[0].page_content)
 
 # for i, doc in enumerate(results):
 #     print(f"Result {i+1}: {doc.page_content}")

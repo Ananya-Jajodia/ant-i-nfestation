@@ -4,7 +4,8 @@ from langchain_community.vectorstores import FAISS
 import pickle
 import faiss
 
-loader = CSVLoader(file_path="/Users/MikaFinkman/cs4701/ant-i-nfestation/backend/chatbot/daylilies_data.csv")
+# loader = CSVLoader(file_path="/Users/MikaFinkman/cs4701/ant-i-nfestation/backend/chatbot/daylilies_data.csv")
+loader = CSVLoader(file_path="/Users/MikaFinkman/cs4701/ant-i-nfestation/backend/chatbot/transformed_plant_data.csv")
 documents = loader.load()
 document_texts = [doc.page_content for doc in documents]
 embeddings = OllamaEmbeddings(model="nomic-embed-text")

@@ -1,10 +1,10 @@
 import requests
 import json
 from pprint import pprint
+import credentials
 
-API_KEY = "2b10LOUzU08HpKvhRpcXSiuRDu"	# Your API_KEY here
 PROJECT = "all"; # try specific floras: "weurope", "canada"…
-api_endpoint = f"https://my-api.plantnet.org/v2/identify/{PROJECT}?api-key={API_KEY}"
+api_endpoint = f"https://my-api.plantnet.org/v2/identify/{PROJECT}?api-key={credentials.API_KEY}"
 
 image_path_1 = "/Users/MikaFinkman/cs4701/ant-i-nfestation/data/images/daylily.png"
 image_data_1 = open(image_path_1, 'rb')
