@@ -6,6 +6,9 @@ from langchain_community.docstore.in_memory import InMemoryDocstore
 from langchain.memory import ConversationBufferMemory
 from langchain.chains import ConversationalRetrievalChain
 from langchain_community.llms import Ollama
+from langchain.chains.question_answering import load_qa_chain
+from langchain.chains.llm import LLMChain
+from langchain.prompts import PromptTemplate
 
 import pickle
 import faiss
@@ -33,16 +36,38 @@ vector_db = FAISS(
     index_to_docstore_id=index_to_docstore_id
 )
 
+# CONDENSE_QUESTION_PROMPT = PromptTemplate.from_template("""
+# Given the following conversation and a follow-up question, rephrase the follow-up question to be a standalone question.
+# Always include the plant being discussed, even if the follow-up doesn't mention it.
 
-# memory = ConversationBufferMemory(memory_key="chat_history", return_messages=True)
+# Chat History:
+# {chat_history}
+# Follow-Up Question: {question}
+# Standalone question:
+# """)
+
+# llm = Ollama(model="llama3.2")
+
+memory = ConversationBufferMemory(memory_key="chat_history", return_messages=True)
 # # retriever = vector_db.as_retriever(search_type="similarity", search_kwargs={"k": 5})
 
+# question_generator = LLMChain(llm=llm, prompt=CONDENSE_QUESTION_PROMPT)
 
-# # Set up a retrieval chain
-# retrieval_chain = ConversationalRetrievalChain.from_llm(
-#     llm=Ollama(model="llama3.2"),
+# doc_chain = load_qa_chain(llm, chain_type="stuff")
+
+# Set up a retrieval chain
+retrieval_chain = ConversationalRetrievalChain.from_llm(
+    llm=Ollama(model="llama3.2"),
+    retriever=vector_db.as_retriever(search_type="similarity", search_kwargs={"k": 5}),
+    memory=memory
+)
+
+# retrieval_chain = ConversationalRetrievalChain(
 #     retriever=vector_db.as_retriever(search_type="similarity", search_kwargs={"k": 5}),
-#     memory=memory
+#     question_generator=question_generator,
+#     combine_docs_chain=doc_chain,
+#     memory=memory,
+#     return_source_documents=False
 # )
 
 # queries = [
@@ -57,9 +82,19 @@ vector_db = FAISS(
 #     for i, doc in enumerate(results):
 #         print(f"Result {i+1}: {doc.page_content}")
 
-print(vector_db.similarity_search("How much water does my roses need?")[0].page_content)
-print(vector_db.similarity_search("How much sun does my roses need?")[0].page_content)
-print(vector_db.similarity_search("What time of year should I fertilize my roses?")[0].page_content)
+# print(vector_db.similarity_search("How much water does my roses need?")[0].page_content)
+# print(vector_db.similarity_search("How much sun do they need?")[0].page_content)
+# print(vector_db.similarity_search("What time of year should I fertilize my roses?")[0].page_content)
 
 # for i, doc in enumerate(results):
 #     print(f"Result {i+1}: {doc.page_content}")
+
+queries = [
+    "How much water does my roses need?",
+    "How much sun do they need?",
+    "What time of year should I fertilize them?"
+]
+
+for query in queries:
+    result = retrieval_chain.run(query)
+    print(f"\nUser: {query}\nBot: {result}")
