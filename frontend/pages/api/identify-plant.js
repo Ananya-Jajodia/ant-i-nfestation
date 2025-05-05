@@ -20,13 +20,14 @@ export default async function handler(req, res) {
     if (err || !files.image) {
       return res.status(400).json({ error: "Image upload failed" });
     }
-
-    const imagePath = files.image.filepath;
+    // console.log("Files object:", files);
+    // console.log("Image file object:", files.image);
+    const imagePath = files.image[0].filepath;
 
     // Adjust path to backend script
     const pythonScriptPath = path.resolve(process.cwd(), "../backend/identifier/identify_wrapper.py");
 
-    const python = spawn("python3", [pythonScriptPath, imagePath]);
+    const python = spawn("/Applications/anaconda3/envs/ollama_env/bin/python", [pythonScriptPath, imagePath]);
 
     let result = "";
 

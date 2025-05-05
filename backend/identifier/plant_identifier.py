@@ -29,7 +29,7 @@ def identify_plant(image_bytes):
     try:
         common_name = result['results'][0]['species']['commonNames'][0]
     except (KeyError, IndexError):
-        common_name = "Unknown"
+        common_name = f"{response.status_code}: {response}"
 
     return common_name
 
