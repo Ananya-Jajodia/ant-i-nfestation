@@ -4,7 +4,11 @@ const nextConfig = {
     return [
       {
         source: '/api/funky-story',
-        destination: 'http://localhost:5000/api/funky-story', // Flask backend
+        destination: 'http://localhost:5050/api/funky-story', // Flask backend
+      },
+      {
+        source: '/api/plant-chat',
+        destination: 'http://localhost:5050/api/plant-chat',
       },
     ];
   },

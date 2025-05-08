@@ -18,8 +18,7 @@ export default async function handler(req, res) {
     if (err || !files.image) {
       return res.status(400).json({ error: "Image upload failed" });
     }
-    // console.log("Files object:", files);
-    // console.log("Image file object:", files.image);
+
     const imagePath = files.image[0].filepath;
 
     // Adjust path to backend script
