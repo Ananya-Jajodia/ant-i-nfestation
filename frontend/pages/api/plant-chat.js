@@ -4,7 +4,7 @@ export default async function handler(req, res) {
   }
 
   try {
-    const flaskRes = await fetch("http://localhost:5050/api/plant-chat", {
+    const flaskRes = await fetch("http://localhost:4000/api/plant-chat", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(req.body),
