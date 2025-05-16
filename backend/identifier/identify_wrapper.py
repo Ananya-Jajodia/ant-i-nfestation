@@ -1,5 +1,3 @@
-# backend/identifier/identify_wrapper.py
-
 import sys
 from plant_identifier import identify_plant
 import requests
@@ -9,4 +7,3 @@ if __name__ == "__main__":
     with open(image_path, "rb") as f:
         image_bytes = f.read()
     print(identify_plant(image_bytes))
-    #print("Python executable:", sys.executable)

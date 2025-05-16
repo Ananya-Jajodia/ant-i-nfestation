@@ -1,7 +1,6 @@
 import os
 import gzip
 import requests
-# import pandas as pd
 from bs4 import BeautifulSoup
 from xml.etree import ElementTree as ET
 import cloudscraper
@@ -13,26 +12,23 @@ def save_to_csv(data, filename):
         print("No data to save.")
         return
     
-    keys = data[0].keys()  # Get column names from the first dictionary
+    keys = data[0].keys()
     
     with open(filename, mode='w', newline='', encoding='utf-8') as file:
         writer = csv.DictWriter(file, fieldnames=keys)
         writer.writeheader()
         writer.writerows(data)
 
-# checks if the url is in the disallowed list
 def item_not_in_file(item, file_path):
     """Checks if a given item is NOT present in the text file."""
     with open(file_path, "r", encoding="utf-8") as file:
         for line in file:
             if item in line:
-                return False  # Item is found, so it's NOT missing
-    return True  # Item is NOT found in the file
+                return False
+    return True
 
-# Initialize CloudScraper to bypass Cloudflare protections
 scraper = cloudscraper.create_scraper()
 
-# Headers to mimic a real browser request
 headers = {
     "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36",
     "Referer": "https://garden.org/",
@@ -42,7 +38,6 @@ headers = {
     "Connection": "keep-alive"
 }
 
-# Load and parse the sitemap file
 sitemap_path = "/Users/iam_aj/ant-i-nfestation/data/sitemaps/map.1.xml.gz"
 
 with gzip.open(sitemap_path, 'rt', encoding='utf-8') as f:
@@ -50,25 +45,13 @@ with gzip.open(sitemap_path, 'rt', encoding='utf-8') as f:
     tree = ET.parse(f)
     root = tree.getroot()
 
-# Extract URLs from the sitemap
 namespaces = {'ns': 'http://www.sitemaps.org/schemas/sitemap/0.9'}
 urls = [elem.text for elem in root.findall('.//ns:loc', namespaces)]
 
-# def extract_plant_name(url):
-#     """Extracts plant name from the URL path."""
-#     parts = url.split('/')
-#     if "grow" in parts:  
-#         index = parts.index("grow") + 1
-#         if index < len(parts):
-#             return parts[index].replace("-", " ").title()  # Format plant name
-#     return "Unknown"
-
-# Query the url
 def fetch_page(url):
     """Fetches and extracts content from the page."""
     print(f"Fetching {url}")
 
-    # Request the page
     response = scraper.get(url, headers=headers)
     
     if response.status_code == 200:
@@ -80,7 +63,6 @@ def fetch_page(url):
             print(f"Warning: No text content found on {url}")
 
         return {
-            # 'Plant Name': extract_plant_name(url),
             'URL': url,
             'Title': title,
             'Content': body_text.strip()
@@ -89,9 +71,8 @@ def fetch_page(url):
         print(f"Failed to fetch {url}, Status Code: {response.status_code}")
         return None
 
-# Scrape each URL and store results
 scraped_data = []
-limit = 100  # Prevent excessive requests
+limit = 100 
 
 for url in urls[:limit]:
     if item_not_in_file(url, "/Users/iam_aj/ant-i-nfestation/data/robots.txt"):
@@ -101,9 +82,6 @@ for url in urls[:limit]:
     else:
         print(f"{url} in robots, access not allowed!")
 
-
-# Convert scraped data to DataFrame and save as CSV
-# df = pd.DataFrame(scraped_data)
 csv_filename = "scraped_plants_data.csv"
 save_to_csv(scraped_data, csv_filename)
 

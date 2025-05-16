@@ -21,7 +21,6 @@ export default async function handler(req, res) {
 
     const imagePath = files.image[0].filepath;
 
-    // Adjust path to backend script
     const pythonScriptPath = path.resolve(process.cwd(), "../backend/identifier/identify_wrapper.py");
 
     const python = spawn("/Applications/anaconda3/envs/ollama_env/bin/python", [pythonScriptPath, imagePath]);

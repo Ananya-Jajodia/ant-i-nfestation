@@ -61,8 +61,7 @@ if __name__ == "__main__":
       "Thymes", "Tickseeds", "Toad Lilies", "Torch Lilies", "Tradescantias", "Trilliums", "Tropical Hibiscuses", "Tulips",
       "Turnips", "Typhoniums", "Uvularias", "Veronicas", "Viburnums", "Violas", "Watermelons", "Wild Gingers", "Wisterias",
       "Witch Hazels", "Wood Sorrels", "Yarrows"
-    ]   
-    # plants = ["Daylilies"]
+    ]
     
      # List of questions
     questions = ["How much sunlight does [] need?",
